@@ -1,0 +1,62 @@
+// ----------------------------------------
+// DYNAMIC CANDLE COLORS
+// Author: Kurniawan Fitriadi
+// Email: kurniawan.fitriadi@gmail.com
+// Desc: -
+// ----------------------------------------
+
+function DynamicCandles(_open, _high, _low, _close) {
+	for( i = 0; i < BarCount; i++ ) {
+	
+		result[i] = ParamColor("Default", colorYellow );
+		
+		// default color
+		if( _close[i] < _open[i] ) { 
+			result[i] = ParamColor("Close < Open", colorRed );
+		} 
+		else if ( _close[i] > _open[i] ) {
+			result[i] = ParamColor("Close > Open", colorLime );
+		}
+		
+		// darker color
+		if( i > 0 AND (_close[i] < _low[i-1]) ) {
+			result[i] = ParamColor("Close < Prev. Low", colorDarkRed );
+		}
+		else if(i > 0 AND (_close[i] > _high[i-1]) ) {
+			result[i] = ParamColor("Close > Prev. High", colorGreen );
+		}
+
+		// doji
+		dojiColor = ParamColor("Doji", colorYellow);
+		if((_close[i] == _open[i])) {
+			result[i] = dojiColor;
+		}
+		
+		_range = abs(_close[i]-_open[i]);
+		_threshold = Param("Doji Threshold", 100);
+		_wickFactor = Param("Doji Wick Multiplier", 2.5);
+		
+		if (_range < _threshold) {
+			// doji (on green candle)
+			if( (_close[i] > _open[i]) AND (abs(_high[i]-_close[i]) > (_threshold * _wickFactor)) ) {
+				result[i] = dojiColor;
+			}	
+			// doji (on red candle)
+			else if( (_close[i] < _open[i]) AND (abs(_low[i]-_close[i]) > (_threshold * _wickFactor)) ) {
+				result[i] = dojiColor;
+			}
+		}
+	}
+	
+	return result;
+}
+
+
+_SECTION_BEGIN("Dynamic Candle");
+//SetChartOptions(1, 0, ChartGrid30|ChartGrid70, 80);
+SetChartOptions(0,chartShowArrows|chartShowDates);
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g, Range %g (%.1f%%) {{VALUES}}", O, H, L, C, C-O, SelectedValue( ROC( C, 1 ) ) ));
+
+candleColor = DynamicCandles(Open, High, Low, Close); 
+Plot( C, "Close", candleColor, styleNoTitle | ParamStyle("Style") | GetPriceStyle() ); 
+_SECTION_END();
