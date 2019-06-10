@@ -28,24 +28,28 @@ function DynamicCandles(_open, _high, _low, _close) {
 
 		// doji
 		dojiColor = ParamColor("Doji", colorYellow);
+		
+		
+		_range = abs(_close[i]-_open[i]);
+		_threshold = Param("Doji Threshold", 50);
+		_wickFactor = Param("Doji Wick Multiplier", 2.5);
+		
 		if((_close[i] == _open[i])) {
 			result[i] = dojiColor;
 		}
-		
-		_range = abs(_close[i]-_open[i]);
-		_threshold = Param("Doji Threshold", 100);
-		_wickFactor = Param("Doji Wick Multiplier", 2.5);
-		
-		if (_range < _threshold) {
+		else if (_range <= _threshold) {
+			//result[i] = colorAqua;
 			// doji (on green candle)
-			if( (_close[i] > _open[i]) AND (abs(_high[i]-_close[i]) > (_threshold * _wickFactor)) ) {
+			if( (_close[i] > _open[i]) AND (abs(_high[i]-_close[i]) > (abs(_close[i]-_open[i]) * _wickFactor))) {
 				result[i] = dojiColor;
 			}	
 			// doji (on red candle)
-			else if( (_close[i] < _open[i]) AND (abs(_low[i]-_close[i]) > (_threshold * _wickFactor)) ) {
+			else if( (_close[i] < _open[i]) AND (abs(_low[i]-_close[i]) > (abs(_close[i]-_open[i]) * _wickFactor))) {
 				result[i] = dojiColor;
 			}
 		}
+		
+		
 	}
 	
 	return result;
