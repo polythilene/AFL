@@ -55,7 +55,7 @@ function DynamicCandles(_open, _high, _low, _close) {
 _SECTION_BEGIN("Dynamic Candle");
 //SetChartOptions(1, 0, ChartGrid30|ChartGrid70, 80);
 SetChartOptions(0,chartShowArrows|chartShowDates);
-_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g, Range %g (%.1f%%) {{VALUES}}", O, H, L, C, C-O, SelectedValue( ROC( C, 1 ) ) ));
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g, Change %g (%.1f%%) {{VALUES}}", O, H, L, C, C-O, SelectedValue( ROC( C, 1 ) ) ));
 
 candleColor = DynamicCandles(Open, High, Low, Close); 
 Plot( C, "Close", candleColor, styleNoTitle | ParamStyle("Style") | GetPriceStyle() ); 
