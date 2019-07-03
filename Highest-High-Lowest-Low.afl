@@ -1,0 +1,16 @@
+// ----------------------------------------
+// HHLL
+// Author: Kurniawan Fitriadi
+// Email: kurniawan.fitriadi@gmail.com
+// Desc: -
+// ----------------------------------------
+
+hhf = ParamField("Highest High Price field",1);
+llf = ParamField("Lowest Low Price field",2);
+
+hv = HHV(hhf, Param("Highest High Range", 85));
+lv = LLV(llf, Param("Lowest Low Range", 35));
+
+style = ParamStyle("Style", styleLine|styleThick);
+Plot(hv, "High", ParamColor("Highest High Color", colorLime), style);
+Plot(lv, "Low", ParamColor("Lowest Low Color", colorRed), style);
