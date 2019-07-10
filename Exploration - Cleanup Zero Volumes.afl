@@ -1,0 +1,59 @@
+// ----------------------------------------
+// REMOVE ZERO VOLUME CANDLES
+// Author: Kurniawan Fitriadi
+// Email: kurniawan.fitriadi@gmail.com
+// Desc: -
+// How To Use: Load this file in Analysis Tools Formula and press 'Scan' that's all. 
+// ----------------------------------------
+
+
+// create folder for exporting purposes
+fmkdir( "C:\\DataExport\\Cache\\" );
+
+// phase 1: save data to file, currently i dunno how to save string to array, so let's just put it to file
+
+
+// open file for writing
+// file name depends on currently processed ticker
+fh = fopen( "c:\\DataExport\\Cache\\" + Name() + ".txt", "w" );
+
+// proceed if file handle is correct
+if ( fh )
+{
+	dt = DateTime();
+	// iterate through all the bars
+	for ( i = 0; i < BarCount; i++ )
+	{
+		if( V[i] == 0.0 )
+			fputs( DateTimeToStr(dt[i]) + "\n", fh );
+	}
+
+	// close file handle
+	fclose( fh );
+}
+ 
+// phase 2: open file, and delete quote on specified date
+
+AB = CreateObject("Broker.Application");
+Sym = AB.Stocks(Name());
+if( Sym )
+{
+   Quotes = Sym.Quotations;
+   
+	fh = fopen( "c:\\DataExport\\Cache\\" + Name() + ".txt", "r" );
+	if( fh ) 
+	{ 
+		while(!feof(fh)) 
+		{ 
+			d = fgets(fh); 
+			Quotes.Remove(d);
+		} 
+	}
+	fclose( fh );
+}
+
+AB.RefreshAll(); 
+
+// 
+// line required by SCAN option
+Buy = 0;
