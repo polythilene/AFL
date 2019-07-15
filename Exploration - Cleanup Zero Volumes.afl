@@ -8,6 +8,7 @@
 
 
 // create folder for exporting purposes
+fmkdir( "C:\\DataExport\\");
 fmkdir( "C:\\DataExport\\Cache\\" );
 
 // phase 1: save data to file, currently i dunno how to save string to array, so let's just put it to file
@@ -48,8 +49,8 @@ if( Sym )
 			d = fgets(fh); 
 			Quotes.Remove(d);
 		} 
+		fclose( fh );
 	}
-	fclose( fh );
 }
 
 AB.RefreshAll(); 
